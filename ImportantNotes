@@ -1,0 +1,83 @@
+Pivot :
+	A pivot is an aggregation where one (or more in the general case) of the grouping columns has its distinct values transposed into individual columns.
+
+@tailrec:
+	Recursion is an essential part of functional programming. But if each call allocates a stack frame, then too much recursion will overflow the stack. Most functional programming languages solve 	 this problem by eliminating stack frames through a process called tail-call optimisation. Unfortunately for Scala programmers, the JVM doesn't perform this optimisation.
+	
+	Because of these limitations, you need to be careful when using recursion in Scala. When writing programs, you will need to keep in mind how both the compiler and the JVM work. One safe approach 		is to use code from the standard library, where possible. For example, you'll find that many recursive algorithms can easily be rewritten in terms of standard operations like map and fold.
+
+	In Scala 2.8, you will also be able to use the new @tailrec annotation to get information about which methods are optimised. This annotation lets you mark specific methods that you hope the 		compiler will optimise. You will then get a warning if they are not optimised by the compiler. In Scala 2.7 or earlier, you will need to rely on manual testing, or inspection of the bytecode, to 		work out whether a method has been optimised.
+
+	If you do find a call that you think should be optimised by the compiler, but isn't, then you should check that the call:
+
+	    is a tail call,
+	    is in a final method or local function, and
+	    is to itself.
+
+	For example, the code for factorial below would not be optimised. The call is not in tail position (the tail operation is the multiplication), and the method is public and non-final, so it could 		be overridden by a subclass.
+
+	class Factorial1 {
+	  def factorial(n: Int): Int = {
+	    if (n <= 1) 1
+	    else n * factorial(n - 1)
+	  }
+	}
+
+	You can make simple changes to factorial to eliminate both of these problems. First, you could move the recursive code into a local function within the method, so that it cannot be overridden. 	 Second, you could introduce an accumulator so that multiplication happens before the recursive call. Finally, you could add a @tailrec annotation so that you can be sure that your changes have 	worked.
+
+	import scala.annotation.tailrec
+
+	class Factorial2 {
+	  def factorial(n: Int): Int = {
+	    @tailrec def factorialAcc(acc: Int, n: Int): Int = {
+	      if (n <= 1) acc
+	      else factorialAcc(n * acc, n - 1)
+	    }
+	    factorialAcc(1, n)
+	  }
+	}
+
+	But there are some types of recursive code that the compiler will not be able to optimise. For example, if your code is mutually recursive, as it is with odd1 and even1, then you will need to try 	something else. One thing you might consider, is using a trampoline.
+
+:) screen -x <screenName> for multiusers
+
+
+Parquet File Details: https://tech.blue-yonder.com/efficient-dataframe-storage-with-apache-parquet/
+
+Logistic Regression Scala Explain: http://www.bmc.com/blogs/using-logistic-regression-scala-spark/
+
+
+Difference Between Concurrency And Parallelism : In Programming, concurrency is the composition of indepedently executing processes, while parallelism is the simultaneous execution of(possibly related) computations. Concurrency is about dealing with lots of things at once. Parallelism is about doing lots of things at once. https://blog.golang.org/concurrency-is-not-parallelism
+
+DataSets vs DataFrame vs RDD
+
+	Datasets are DataFrames with the types of the columns defined.When converting a Dataset to DataFrame only the type info is lost otherwise the object is the same and vica versa i.e. you can convert a DataFrame to Dataset by defining the types of the columns in a case class.
+
+LSTMs :
+	https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+
+If training vanilla neural nets is optimization over functions, training recurrent nets is optimization over programs.
+
+http://brohrer.github.io/how_convolutional_neural_networks_work.html : CNN
+
+https://www.youtube.com/watch?v=WCUNPb-5EYI&feature=youtu.be : RNN
+
+
+https://realpython.com/python-data-classes/ : DataClasses [Python >3.6]
+
+To check the missing values in each column: df.apply(lambda x: sum(x.isnull()),axis=0)
+
+In SVR we need to perform feature scaling because the svm.SVR package doesnt include feature scaling[Low Popularity]. Also in SVR kernel= 'rbf' represents Gussian kernel.
+
+
+
+
+
+
+
+
+
+
+
+
+
